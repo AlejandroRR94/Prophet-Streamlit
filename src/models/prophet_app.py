@@ -13,6 +13,11 @@ st.title("Predicciones de Prophet")
 st.markdown("Aplicación de Streamlit para producir predicciones de Prophet sobre archivos que contienen series temporales")
 
 data_file = st.file_uploader("Selecciona tu archivo excel para predecir la serie temporal \n(por defecto cargamos una serie temporal de yahoo)")
+
+directory = Path(os.path.dirname(__file__)).parent.absolute().parent.absolute()
+data_directory = os.path.join(directory, "data", "raw")
+trial_data = st.selectbox("Archivos de prueba", [file for file in os.listdir(data_directory)])
+
 if data_file is not None:
     try:
         # if data_file is not None:
@@ -20,7 +25,7 @@ if data_file is not None:
     except Exception as e:
         data = pd.read_csv(data_file)
 else:
-    data = load_data()
+    data = load_data(trial_data)
 
 # MOSTRAMOS LOS DATOS
 st.write("Todos los datos")
