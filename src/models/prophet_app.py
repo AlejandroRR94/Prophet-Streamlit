@@ -24,7 +24,10 @@ else:
 
 # MOSTRAMOS LOS DATOS
 st.write("Todos los datos")
-st.write(data.groupby("Country").head())
+if "Country" in list(data.columns):
+    st.write(data.groupby("Country").head())
+else:
+    st.write(data.head())
 st.write(data.shape)
 
 
