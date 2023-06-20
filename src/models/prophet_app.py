@@ -16,7 +16,7 @@ data_file = st.file_uploader("Selecciona tu archivo excel para predecir la serie
 
 directory = Path(os.path.dirname(__file__)).parent.absolute().parent.absolute()
 data_directory = os.path.join(directory, "data", "raw")
-trial_data = st.selectbox("Archivos de prueba", [file for file in os.listdir(data_directory)])
+trial_data = st.selectbox("Archivos de prueba", [file for file in os.listdir(data_directory) if "git" not in file])
 
 if data_file is not None:
     try:
