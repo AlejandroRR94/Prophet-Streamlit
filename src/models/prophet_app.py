@@ -74,6 +74,7 @@ st.sidebar.write("PARÁMETROS")
 st.sidebar.markdown("Modificar los siguientes parámetros para alterar el ajuste y la predicción del modelo")
 changepoint_prior_scale = st.sidebar.slider("changepoint_prior_scale", 0.0, 1.0, 0.05, 0.01)
 seasonality_prior_scale = st.sidebar.slider("seasonality_prior_scale", 0.0, 10.0, 1.0, 0.1)
+days_to_forecast = st.sidebar.number_input(label='Días a predecir', min_value = 1, max_value=365, value = 30)
 
 
 
@@ -87,7 +88,6 @@ model.fit(data)
 # Generación de predicciones
 
 
-days_to_forecast = st.sidebar.number_input(label='Días a predecir', min_value = 1, max_value=365, value = 30)
 # days_to_forecast = st.sidebar.slider("days_to_forecast", 1, 365, 1, 1)
 
 future = model.make_future_dataframe(periods=days_to_forecast)  # Predicciones para los próximos 365 días
