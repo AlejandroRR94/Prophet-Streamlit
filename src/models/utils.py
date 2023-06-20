@@ -27,6 +27,7 @@ def select_variables(data:pd.DataFrame):
     """
     Seleccionamos dos variables mediante desplegables
     """
+
     selected_y_var = st.selectbox('**VARIABLE A PREDECIR?**',
                                     list(data.columns)
                                     )

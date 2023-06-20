@@ -56,6 +56,7 @@ if "Country" in list(data.columns):
 
 
 # Selección de variables
+st.write("DISCLAIMER: La variable temporal puede situarse como la target por defecto, al seleccionar las variables tal y como lo haríamos, el error se subsana")
 selected_y_var, time_variable = select_variables(data)
 data = data[[time_variable, selected_y_var]]
 data = data.rename(columns={time_variable: 'ds', selected_y_var: 'y'})
