@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 
 # Carga de datos de ejemplo
-# @st.cache_data
+# @sta lot.cache_data
 def load_data(trial_data):
     """
     Carga por defecto los valores de data/raw/yahoo_data.xlsx
@@ -13,7 +13,10 @@ def load_data(trial_data):
     directory = Path(os.path.dirname(__file__)).parent.absolute().parent.absolute()
     data_directory = os.path.join(directory, "data", "raw")
     if trial_data is not None:
-        df = pd.read_excel(os.path.join(directory, trial_data))  # Reemplazar por la ruta correcta del archivo
+        try:
+            df = pd.read_excel(os.path.join(data_directory, trial_data))  # Reemplazar por la ruta correcta del archivo
+        except Exception:
+            df = pd.read_csv(os.path.join(data_directory, trial_data))  # Reemplazar por la ruta correcta del archivo
     else:
         df = pd.read_excel(os.path.join(directory, "data/raw/yahoo_data.xlsx"))  # Reemplazar por la ruta correcta del archivo
     df.dropna(axis=0, inplace=True)
