@@ -11,7 +11,12 @@ def load_data():
     """
     print('Directory Name:     ', os.path.dirname(__file__))
     directory = Path(os.path.dirname(__file__)).parent.absolute().parent.absolute()
-    df = pd.read_excel(os.path.join(directory, "data/raw/yahoo_data.xlsx"))  # Reemplazar por la ruta correcta del archivo
+    data_directory = os.path.join(directory, "data", "raw")
+    trial_data = st.selectbox("Archivos de prueba", [file for file in os.listdir(data_directory)])
+    if trial_data is not None:
+        df = pd.read_excel(os.path.join(directory, trial_data))  # Reemplazar por la ruta correcta del archivo
+    else:
+        df = pd.read_excel(os.path.join(directory, "data/raw/yahoo_data.xlsx"))  # Reemplazar por la ruta correcta del archivo
     df.dropna(axis=0, inplace=True)
 
     return df
