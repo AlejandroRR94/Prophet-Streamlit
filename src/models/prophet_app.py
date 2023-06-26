@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
 from prophet import Prophet
+
+from prophet.serialize import model_to_json, model_from_json
+
 from utils import *
 import os
 from pathlib import Path
@@ -14,6 +17,9 @@ st.markdown("Aplicación de Streamlit para producir predicciones de Prophet sobr
 
 data_file = st.file_uploader("Selecciona tu archivo excel para predecir la serie temporal \n(por defecto cargamos una serie temporal de yahoo)")
 
+print(f"Directorio del modelo: {os.path.dirname(__file__)}")
+model_directory = os.path.dirname(__file__)
+weights_directory = os.path.join(model_directory, "weights")
 directory = Path(os.path.dirname(__file__)).parent.absolute().parent.absolute()
 data_directory = os.path.join(directory, "data", "raw")
 trial_data = st.selectbox("Archivos de prueba", [file for file in os.listdir(data_directory) if "git" not in file])
@@ -66,18 +72,36 @@ days_to_forecast = st.sidebar.number_input(label='Días a predecir', min_value =
 
 
 
-
-
-
 # Creación del modelo Prophet
 model = Prophet(changepoint_prior_scale=changepoint_prior_scale,
                 seasonality_prior_scale=seasonality_prior_scale)
 
-# Ajuste del modelo a los datos
-model.fit(data)
+
+retrain = st.selectbox("¿Quieres reentrenar el modelo que cargues?", [True, False, "Nuevo Modelo"])
+# Guardamos los pesos del modelo
+weights_name= os.path.join(weights_directory, f"serialized_model_{selected_y_var}_{trial_data.split('.')[0]}.json")
+
+if len(os.listdir(weights_directory))>0:
+    model_name = st.selectbox("Selecciona unos pesos para el modelo", [d.split("/")[-1] for d in os.listdir(weights_directory) if "git" not in d])
+
+# Condicionales para cargar o escribir los pesos del modelo
+if os.path.isfile(weights_name)==True and retrain==False: 
+    with open(weights_name, "r") as fin:
+        model = model_from_json(fin.read())
+
+elif os.path.isfile(weights_name)==True and retrain==True: 
+    model.fit(data)
+    with open(weights_name, "w") as fout:
+        fout.write(model_to_json(model))
+
+elif retrain=="Nuevo Modelo":
+    # Ajuste del modelo a los datos
+    model.fit(data)
+    with open(os.path.join(weights_directory, weights_name), "w") as fout:
+        fout.write(model_to_json(model))
+
 
 # Generación de predicciones
-
 
 # days_to_forecast = st.sidebar.slider("days_to_forecast", 1, 365, 1, 1)
 
